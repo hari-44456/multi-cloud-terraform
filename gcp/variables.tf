@@ -1,6 +1,23 @@
-variable project {}
-variable region {}
-variable public_key_location {}
-variable private_key_location {}
-variable user {}
-variable prefix {}
+variable project {
+    description = " Specify projectId which has active billing and compute api activated"
+}
+
+variable region {
+    description = " Specify region"
+}
+
+variable public_key_location {
+    description = "Specify location for your public key generated via (ssh-keygen)" 
+}
+
+variable private_key_location {
+    description = "Specify location for your private key generated via (ssh-keygen)"
+}
+
+variable user {
+    description = "Specify user's name that will be used for creating VM's"
+}
+
+variable prefix {
+    description = "The prefix which should be used for all resources"
+}
