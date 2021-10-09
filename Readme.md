@@ -2,7 +2,7 @@
 
 
 ## Tech
-- [Terraform](https://www.terraform.io/downloads.html)=
+- [Terraform](https://www.terraform.io/downloads.html)
 - [Ansible](https://docs.ansible.com/ansible/latest/installation_guide/intro_installation.html)
 - [AWS CLI](https://aws.amazon.com/cli/)
 - [AZURE CLI](https://docs.microsoft.com/en-us/cli/azure/install-azure-cli)
