@@ -1,0 +1,9 @@
+- name: Terraform and Ansible Integration
+  hosts: all
+  become: true
+  
+  tasks:
+    - name: Copy file to remote server
+      copy:
+        src: abc.txt
+        dest: /narahari/
