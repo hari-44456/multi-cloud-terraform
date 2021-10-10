@@ -33,6 +33,7 @@ chmod +x test.sh
 sh test.sh
 ```
 
+>Note: This application copies **abc.txt** file to remote server's **default user's home directory**
 
 
 **Free Software, Hell Yeah!**
