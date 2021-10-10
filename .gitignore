@@ -15,3 +15,5 @@ crash.log
 #
 *.tfvars
 *.pem
+auth1.json
+auth.json
