@@ -1,0 +1,12 @@
+{
+  "type": "service_account",
+  "project_id": "prathameshterraform",
+  "private_key_id": "16bc8caec9825f623e8333401a81687f743c4799",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQDF5h8yG2B5lBni\nQLdTrGDDq/4ZiVCaOIpvAPiNKQWVAP5E1qMMcO7Jzx82fmUllRdyKSDHsHonlbec\nDh/AEd0+DsMU7Cxgrzfod9MxdgbWV62vMSA/OXNg3UDWrJe02NkUxEMmtN7CJJf1\nyn3aQWEPyOxH3F4OIeu5r2QOfnG1/FEapLCeYTD2CqYNgbVlfS9wSHw4CgHvmmfu\n5kuqGw/7T9KbPx8g5M9h8lEj6KPZD6FM2d8ZJwn+PR2V175/RrvG+fLiofEgjLJN\nChPllVphzyKK1wh1LXxSAk6GiVRY2TRnGuK0Bjg5yB1MXB1lUxkcycgDcSYx/5mv\ny13sYzYNAgMBAAECggEAKBG7kEQtyQAdK4vp8qWs5AGPjfEZIli/YtFiAgbjy/Mr\nCJoi4lJ9btwimECIT088M4+zROttGFW+mvjbIeMcFkQb6MEXDS59FfMpDlM0+DJB\nhv7d5h9GRr8VsUG559KeRY+lfxFRJyMMp6YrzES/l9gZS0WJv7fLiEnEaxDcCjok\nQJqD3OwgjR+KYdfnS0ho2UjJ19KvGP7B0Ui1AiRc+6hxEQ3bPB9JaWB24yoRHgx5\ndGRMvcMQP3YI429NU8a+iwHMqjmYwH3uIlKuPfL0V+W8ptHnWj1LUTWJMP+ED7s7\ncgEinbLzrTuynW+VdcjherYAPCDaECvVjUyzOQdqwQKBgQD40U2Jt5bjXBLNCxVM\n6y3yK56u1DsTPGS2F3DeIFs0p63i7btuB8U3+u9Xmdx6Au563RxRGoczf2weC8ua\nUbKx0UC3/AtK0Y4IqXGOfU+yJhVzyf843123fOv+FovycBqOrYYhjj8N2dXmpu91\nihAY0syLU5NqgUA3H2UEZAwJLQKBgQDLnIsRf3NuHSeJzpHaGLcWa1eCHlr1Oh/A\n1Lzt7AlvdnJ0Eltp1SL+8Pu8KvJavYercMvvPwkiqUEPj+icAFsIkOKqsJp4UFnz\noUjGXzD14NZjgxFbTq/+RnsZdB1FhnupLu9ZXhTZPzCs5+H+bIHhJj2nwdDmabSY\npcpIo0AsYQKBgQDPY51uWYDB1v+wujkx2KB+Ro9IB4uJ1//Vqqof6vY6aDzOdfqQ\nlpdytoyCBrO3WvQtoli03Rit+tpCHPDCmrAH+HMqJ0G+RfZOD/Wfn6EqywV8cnRx\nkfQKOWx2Z5KUK45nOAkhtO+netcIHkJfRQlvt1xYEPxBfKPqjhdj1oQVrQKBgB6m\n4GCv+SaYiP079cUJd3aOjkvuWe8U4vbaj96ZbAo1oKFMqipShcQvbxYyuO1kHup2\nPp0ztiJbrIm1NmVVwF6XwSfFElwObJw6qYQDjJFXWa79aj1+qQv0fE+mpUl0J2We\nxTWE7kqOMru05NayaxMD+MAqc1Jck21vd/ZbbSvBAoGASy703q9KkANUSnC5KLAr\nu3tYs8ppC5jmbMXE8WVdNXeOL2F1H6dIFzn7OjeitXyi4wGuE8DZ6+cF6ctp4Sat\nlL+6A3zbZGqzOJekBCz6LWKtoJXpl5CLGoiPy33eRyXY0tSSuDAWBjETiP3dddiB\nsk004ddlAJyae28wyYyUG8M=\n-----END PRIVATE KEY-----\n",
+  "client_email": "prathamesh@prathameshterraform.iam.gserviceaccount.com",
+  "client_id": "110408307873719468441",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/prathamesh%40prathameshterraform.iam.gserviceaccount.com"
+}
