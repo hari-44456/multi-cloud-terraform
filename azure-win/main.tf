@@ -186,6 +186,6 @@ resource "azurerm_virtual_machine" "main" {
   }
 
   provisioner "local-exec" {
-    command = "ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook -u ${var.admin_username} -i ${self.public_ip_address}, -p ${var.admin_password} playbook.yml"
+    command = "ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook -u ${var.admin_username} -i ${azurerm_public_ip.main.ip_address}, -e ansible_password=${var.admin_password} playbook.yml"
   }
 }
