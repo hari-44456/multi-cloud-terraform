@@ -2,7 +2,7 @@
 
 # chmod +x test.sh
 
-echo "Choose \n 1-AWS \n 2-AZURE \n 3-GCP"
+echo -e "Choose \n 1-AWS \n 2-AZURE \n 3-GCP"
 read a
 
 if [ $a == 1 ]
