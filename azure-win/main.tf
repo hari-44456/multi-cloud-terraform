@@ -32,7 +32,7 @@ resource "azurerm_virtual_network" "main" {
 }
 
 resource "azurerm_network_security_group" "example" {
-  name                = "acceptanceTestSecurityGroup1"
+  name                = "${var.prefix}-sg"
   location            = azurerm_resource_group.main.location
   resource_group_name = azurerm_resource_group.main.name
 
@@ -55,6 +55,17 @@ resource "azurerm_network_security_group" "example" {
     protocol                   = "Tcp"
     source_port_range          = "*"
     destination_port_range     = "5985"
+    source_address_prefix      = "*"
+    destination_address_prefix = "*"
+  }
+  security_rule {
+    name                       = "WinRM-https"
+    priority                   = 200
+    direction                  = "Inbound"
+    access                     = "Allow"
+    protocol                   = "Tcp"
+    source_port_range          = "*"
+    destination_port_range     = "5986"
     source_address_prefix      = "*"
     destination_address_prefix = "*"
   }
@@ -189,6 +200,6 @@ resource "azurerm_virtual_machine" "main" {
   }
 
   provisioner "local-exec" {
-    command = "ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook -u ${var.admin_username} -i ${azurerm_public_ip.main.ip_address}, -e ansible_password=${var.admin_password} ansible_connection=${var.connection_type} playbook.yml"
+    command = "ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook -u ${var.admin_username} -i ${azurerm_public_ip.main.ip_address}, -e ansible_password=${var.admin_password} -e ansible_connection=${var.connection_type} -e ansible_winrm_server_cert_validation=ignore playbook.yml"
   }
 }
