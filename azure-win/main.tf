@@ -199,14 +199,10 @@ resource "azurerm_virtual_machine" "main" {
     ]
   }
   provisioner "local-exec" {
-<<<<<<< HEAD
-    command = "ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook -u ${var.admin_username} -i ${azurerm_public_ip.main.ip_address} -e ansible_connection=${var.connection_type} -e ansible_password=${var.admin_password} playbook.yml"
-=======
     command="echo ansible_host_1 ansible_host=${azurerm_public_ip.main.ip_address} ansible_user=${var.admin_username} ansible_password=${var.admin_password} ansible_connection=${var.connection_type} ansible_winrm_server_cert_validation=ignore ansible_port=5985 > hosts"
   }
   provisioner "local-exec" {
     command = "ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook -i hosts  playbook.yml"
->>>>>>> 5bb97d824ca2ece270d1198861bee9369a90a8b6
   }
   provisioner "local-exec" {
     command = "rm -rf hosts"
