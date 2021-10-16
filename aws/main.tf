@@ -59,14 +59,6 @@ resource "aws_key_pair" "deployer" {
   public_key = file(var.public_key_location)
 }
 
-variable admin_username {
-  default="narahari"
-}
-
-variable admin_password {
-  default="N@rahari12345!"
-}
-
 resource "aws_instance" "web" {
 
   ami           = "ami-0428fc1ee1bde045a"
@@ -93,30 +85,40 @@ resource "aws_instance" "web" {
     net stop winrm
     sc.exe config winrm start=auto
     net start winrm
+    Add-WindowsCapability -Online -Name OpenSSH.Client~~~~0.0.1.0
+    Add-WindowsCapability -Online -Name OpenSSH.Server~~~~0.0.1.0
+    Start-Service sshd
+    Set-Service -Name sshd -StartupType 'Automatic'
+    Write-Host "Config custom"
+    $url = "https://raw.githubusercontent.com/ansible/ansible/devel/examples/scripts/ConfigureRemotingForAnsible.ps1"
+    $file = "$env:temp\ConfigureRemotingForAnsible.ps1"
+    (New-Object -TypeName System.Net.WebClient).DownloadFile($url, $file)
+    powershell.exe -ExecutionPolicy ByPass -File $file
     </powershell>
     EOF
 
-  connection {
-    host = coalesce(self.public_ip, self.private_ip)
-    type = "winrm"
-    timeout = "10m"
-    user = var.admin_username
-    password = var.admin_password
-  }
-
-  provisioner "file" {
-    source = "abc.txt"
-    destination = "C:/test.txt"
-  }
-
   provisioner "remote-exec" {
-      inline = [
-        "mkdir helloworld",
-      ]
+    connection {
+      host     = coalesce(self.public_ip, self.private_ip)
+      type     = "winrm"
+      port     = 5985
+      https    = false
+      timeout  = "5m"
+      user     = "${var.admin_username}"
+      password = "${var.admin_password}"
     }
-
+    inline = [
+      "mkdir helloworld",
+    ]
+  }
   provisioner "local-exec" {
-    command = "ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook -u ${var.admin_username}   -i ${self.public_ip}, --private-key ${var.private_key_location} playbook.yml"
+    command="echo ansible_host_1 ansible_host=${self.public_ip} ansible_user=${var.admin_username} ansible_password=${var.admin_password} ansible_connection=${var.connection_type} ansible_winrm_server_cert_validation=ignore ansible_port=5985 > hosts"
+  }
+  provisioner "local-exec" {
+    command = "ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook -i hosts  playbook.yml"
+  }
+  provisioner "local-exec" {
+    command = "rm -rf hosts"
   }
 
   tags = {
