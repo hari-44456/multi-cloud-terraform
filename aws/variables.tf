@@ -6,21 +6,12 @@ variable private_key_location {
     description = "Specify location for your private key generated via (ssh-keygen)"
 }
 
-variable admin_username {
-  default="narahari"
-}
-s
-variable admin_password {
-  default="N@rahari12345!"
+variable user {
+    description = "Specify user's name that will be used for creating VM's"
 }
 
 variable prefix {
     description = "The prefix which should be used for all resources"
-}
-
-variable connection_type {
-    description = "This describes the connection type"
-    default = "winrm"
 }
 
 variable vpc_cidr_block {

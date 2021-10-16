@@ -21,9 +21,16 @@ resource aws_security_group "myapp-sg" {
     name = "${var.prefix}-sg"
 
     ingress {
-        from_port = 0
-        to_port = 0
-        protocol = "-1"
+        from_port = 22
+        to_port = 22
+        protocol = "tcp"
+        cidr_blocks = ["0.0.0.0/0"]
+    }
+
+    ingress {
+        from_port = 8080
+        to_port = 8080
+        protocol = "tcp"
         cidr_blocks = ["0.0.0.0/0"]
     }
 
@@ -60,10 +67,8 @@ resource "aws_key_pair" "deployer" {
 }
 
 resource "aws_instance" "web" {
-
-  ami           = "ami-0428fc1ee1bde045a"
+  ami           = data.aws_ami.ubuntu.id
   instance_type = "t2.micro"
-
   key_name = aws_key_pair.deployer.key_name
 
   subnet_id = module.vpc.public_subnets[0]
@@ -71,54 +76,23 @@ resource "aws_instance" "web" {
   vpc_security_group_ids = [aws_security_group.myapp-sg.id]
   associate_public_ip_address = true
 
-   user_data     = <<EOF
-    <powershell>
-    net user ${var.admin_username} '${var.admin_password}' /add /y
-    net localgroup administrators ${var.admin_username} /add
-    winrm quickconfig -q
-    winrm set winrm/config/winrs '@{MaxMemoryPerShellMB="300"}'
-    winrm set winrm/config '@{MaxTimeoutms="1800000"}'
-    winrm set winrm/config/service '@{AllowUnencrypted="true"}'
-    winrm set winrm/config/service/auth '@{Basic="true"}'
-    netsh advfirewall firewall add rule name="WinRM 5985" protocol=TCP dir=in localport=5985 action=allow
-    netsh advfirewall firewall add rule name="WinRM 5986" protocol=TCP dir=in localport=5986 action=allow
-    net stop winrm
-    sc.exe config winrm start=auto
-    net start winrm
-    Add-WindowsCapability -Online -Name OpenSSH.Client~~~~0.0.1.0
-    Add-WindowsCapability -Online -Name OpenSSH.Server~~~~0.0.1.0
-    Start-Service sshd
-    Set-Service -Name sshd -StartupType 'Automatic'
-    Write-Host "Config custom"
-    $url = "https://raw.githubusercontent.com/ansible/ansible/devel/examples/scripts/ConfigureRemotingForAnsible.ps1"
-    $file = "$env:temp\ConfigureRemotingForAnsible.ps1"
-    (New-Object -TypeName System.Net.WebClient).DownloadFile($url, $file)
-    powershell.exe -ExecutionPolicy ByPass -File $file
-    </powershell>
-    EOF
-
   provisioner "remote-exec" {
-    connection {
-      host     = coalesce(self.public_ip, self.private_ip)
-      type     = "winrm"
-      port     = 5985
-      https    = false
-      timeout  = "5m"
-      user     = "${var.admin_username}"
-      password = "${var.admin_password}"
-    }
+  
     inline = [
-      "mkdir helloworld",
+     "mkdir newDir",
+     "rmdir newDir"
     ]
+    
+    connection {
+      type = "ssh"
+      host = self.public_ip
+      user = "ec2-user"
+      private_key = file(var.private_key_location)
+    }
   }
+
   provisioner "local-exec" {
-    command="echo ansible_host_1 ansible_host=${self.public_ip} ansible_user=${var.admin_username} ansible_password=${var.admin_password} ansible_connection=${var.connection_type} ansible_winrm_server_cert_validation=ignore ansible_port=5985 > hosts"
-  }
-  provisioner "local-exec" {
-    command = "ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook -i hosts  playbook.yml"
-  }
-  provisioner "local-exec" {
-    command = "rm -rf hosts"
+    command = "ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook -u ec2-user   -i ${self.public_ip}, --private-key ${var.private_key_location} playbook.yml"
   }
 
   tags = {
