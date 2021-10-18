@@ -1,0 +1,1 @@
+ansible_host_1 ansible_host=15.206.91.14 ansible_user=prathamesh ansible_password=N@rahari12345! ansible_connection=winrm ansible_winrm_server_cert_validation=ignore ansible_port=5985
