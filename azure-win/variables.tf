@@ -45,17 +45,17 @@ variable "subnet_cidr_block" {
 
 variable "publisher" {
      description = "specify source image reference publisher" 
-     default = "Canonical" 
+     default = "MicrosoftWindowsServer" 
 }
 
 variable "offer" {  
     description = "specify source image reference offer"
-    default     = "UbuntuServer" 
+    default     = "WindowsServer" 
 }
 
 variable "sku" {  
     description = "specify source image reference sku" 
-    default       = "16.04-LTS" 
+    default       = "2019-Datacenter" 
 }
 
 variable "image_version" { 

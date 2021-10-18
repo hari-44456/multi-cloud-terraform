@@ -1,15 +1,3 @@
-variable "os_ms" {
-  description = "Operating System for Database (MSSQL) on the Production Environment"
-  type        = map(string)
-
-  default = {
-    publisher   =   "MicrosoftWindowsServer"
-    offer       =   "WindowsServer"
-    sku         =   "2019-Datacenter"
-    version     =   "latest"
-  }
-}
-
 resource "azurerm_resource_group" "main" {
   name     = "${var.prefix}-resources"
   location = var.location
