@@ -5,13 +5,13 @@ resource "azurerm_resource_group" "main" {
 
 resource "azurerm_virtual_network" "main" {
   name                = "${var.prefix}-network"
-  address_space       = ["10.0.0.0/16"]
+  address_space       = [var.vpc_cidr_block]
   location            = azurerm_resource_group.main.location
   resource_group_name = azurerm_resource_group.main.name
 }
 
 resource "azurerm_network_security_group" "example" {
-  name                = "acceptanceTestSecurityGroup1"
+  name                = "${var.prefix}-sg"
   location            = azurerm_resource_group.main.location
   resource_group_name = azurerm_resource_group.main.name
 
@@ -36,7 +36,7 @@ resource "azurerm_subnet" "internal" {
   name                 = "internal"
   resource_group_name  = azurerm_resource_group.main.name
   virtual_network_name = azurerm_virtual_network.main.name
-  address_prefixes     = ["10.0.2.0/24"]
+  address_prefixes     = [var.subnet_cidr_block]
 }
 
 resource "azurerm_public_ip" "main" {
@@ -68,7 +68,7 @@ resource "azurerm_linux_virtual_machine" "main" {
   name                            = "${var.prefix}-vm"
   resource_group_name             = azurerm_resource_group.main.name
   location                        = azurerm_resource_group.main.location
-  size                            = "Standard_F2"
+  size                            = var.size
   admin_username                  = var.user
 
   network_interface_ids = [
@@ -81,10 +81,10 @@ resource "azurerm_linux_virtual_machine" "main" {
   }
 
   source_image_reference {
-    publisher = "Canonical"
-    offer     = "UbuntuServer"
-    sku       = "16.04-LTS"
-    version   = "latest"
+    publisher = var.publisher
+    offer     = var.offer
+    sku       = var.sku
+    version   = var.image_version
   }
 
   os_disk {

@@ -1,17 +1,24 @@
+variable "access_key" {
+    description = "Specify aws ACCESS_KEY"
+}
+
+variable "secret_key" {
+    description = "Specify aws SECRET_ACCESS_KEY"
+}
+
 variable public_key_location {
     description = "Specify location for your public key generated via (ssh-keygen)"
+    default = "~/.ssh/id_rsa.pub"
 }
 
 variable private_key_location {
     description = "Specify location for your private key generated via (ssh-keygen)"
-}
-
-variable user {
-    description = "Specify user's name that will be used for creating VM's"
+    default = "~/.ssh/id_rsa"
 }
 
 variable prefix {
     description = "The prefix which should be used for all resources"
+    default = "automation"
 }
 
 variable vpc_cidr_block {
@@ -26,4 +33,15 @@ variable subnet_cidr_block {
 
 variable avail_zone {
     description = "Specify availability zone"
+    default = "us-east-2a"
+}
+
+variable "region" {
+    description = " Specify region"
+    default = "us-east-2"
+}
+
+variable "ami_id" {
+    description = "Specify linux ami id"
+    default = "ami-074cce78125f09d61"
 }

@@ -26,20 +26,18 @@ resource "google_compute_firewall" "webserverrule" {
 
 resource "google_compute_address" "static" {
   name = "vm-public-address"
-  project = var.project
-  region = var.region
   depends_on = [ google_compute_firewall.firewall ]
 }
 
 resource "google_compute_instance" "dev" {
   name         = "${var.prefix}-vm"
-  machine_type = "f1-micro"
-  zone         = "${var.region}-a"
+  machine_type = var.machine_type
+  zone         = var.zone
   tags         = ["externalssh","webserver"]
 
   boot_disk {
     initialize_params {
-      image = "centos-cloud/centos-7"
+      image = var.boot_image
     }
   }
 
