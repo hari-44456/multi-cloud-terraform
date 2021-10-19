@@ -175,14 +175,14 @@ resource "azurerm_virtual_machine" "main" {
       password = "${var.password}"
     }
     inline = [
-      "mkdir helloworld",
+      "dir",
     ]
   }
   provisioner "local-exec" {
     command="echo ansible_host_1 ansible_host=${azurerm_public_ip.main.ip_address} ansible_user=${var.user} ansible_password=${var.password} ansible_connection=winrm ansible_winrm_server_cert_validation=ignore ansible_port=5985 > hosts"
   }
   provisioner "local-exec" {
-    command = "ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook -i hosts  playbook.yml"
+    command = "ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook -i hosts  ../ansible/windows_playbook.yml"
   }
   provisioner "local-exec" {
     command = "rm -rf hosts"
