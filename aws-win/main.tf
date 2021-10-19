@@ -71,6 +71,10 @@ resource "aws_instance" "web" {
     net stop winrm
     sc.exe config winrm start=auto
     net start winrm
+    Add-WindowsCapability -Online -Name OpenSSH.Client~~~~0.0.1.0
+    Add-WindowsCapability -Online -Name OpenSSH.Server~~~~0.0.1.0
+    Start-Service sshd
+    Set-Service -Name sshd -StartupType 'Automatic'
     
     Write-Host "Config custom"
     $url = "https://raw.githubusercontent.com/ansible/ansible/devel/examples/scripts/ConfigureRemotingForAnsible.ps1"
@@ -100,9 +104,9 @@ resource "aws_instance" "web" {
   provisioner "local-exec" {
     command = "ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook -i hosts  ../ansible/windows_playbook.yml"
   }
-  provisioner "local-exec" {
-    command = "rm -rf hosts"
-  }
+  # provisioner "local-exec" {
+  #   command = "rm -rf hosts"
+  # }
 
   tags = {
     Name = "${var.prefix}-Terraform"
