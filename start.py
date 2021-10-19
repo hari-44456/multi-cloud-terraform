@@ -2,13 +2,15 @@ import json
 import os
 
 def validateVariables(required_variables,variables_list):
-    for key,value in variables_list:
-        if(key in required_variables):
-            required_variables.remove(key)
-    
-    if(len(required_variables)):
-        return False
-    return True
+    if variables_list is not None:
+        for key,value in variables_list:
+            if(key in required_variables):
+                required_variables.remove(key)
+        
+        if(len(required_variables)):
+            return False
+        return True
+    return False
 
 def generateApplyCommand(pairs,st="apply"):
     str = "terraform " + st +" --auto-approve "
@@ -31,15 +33,44 @@ azure_windows_required_variables = {"subscription_id","tenant_id","client_id","c
 gcp_linux_required_variables = {"project","service_account_credentials_file_location"}
 
 
-data = json.loads(open("input.json").read())
+aws_linux_variables = None
+aws_windows_variables = None
+azure_linux_variables = None
+azure_windows_variables = None
+gcp_linux_variables = None
+data = None
 
-aws_linux_variables = data["aws_linux"].items()
-aws_windows_variables = data["aws_windows"].items()
+try:
+    data = json.loads(open("input.json").read())
+except:
+    print("Please provide input.json")
+    exit(0)
+    
+try:
+    aws_linux_variables = data["aws_linux"].items()
+except:
+    print("skipping \"aws-linux\" vm creation because you have not provided all required variables in input.json")
 
-azure_linux_variables = data["azure_linux"].items()
-azure_windows_variables = data["azure_windows"].items()
+try:
+    aws_windows_variables = data["aws_windows"].items()
+except:
+    print("skipping \"aws-windows\" vm creation because you have not provided all required variables in input.json")
 
-gcp_linux_variables = data["gcp_linux"].items()
+try:
+    azure_linux_variables = data["azure_linux"].items()
+except:
+    print("skipping \"azure-linux\" vm creation because you have not provided all required variables in input.json")
+
+try:
+    azure_windows_variables = data["azure_windows"].items()
+except:
+    print("skipping \"azure-windows\" vm creation because you have not provided all required variables in input.json")
+
+try:
+    gcp_linux_variables = data["gcp_linux"].items()
+except:
+    print("skipping \"gcp-linux\" vm creation because you have not provided all required variables in input.json")
+
 
 if(validateVariables(aws_linux_required_variables,aws_linux_variables)):
     print(generateApplyCommand(aws_linux_variables))
@@ -47,8 +78,6 @@ if(validateVariables(aws_linux_required_variables,aws_linux_variables)):
     os.system("terraform init -upgrade")
     os.system(generateApplyCommand(aws_linux_variables))
     os.chdir("..")
-else:
-    print("skipping \"aws-linux\" vm creation because you have not provided all required variables in input.json")
 
 if(validateVariables(aws_windows_required_variables,aws_windows_variables)):
     print(generateApplyCommand(aws_windows_variables))
@@ -56,8 +85,6 @@ if(validateVariables(aws_windows_required_variables,aws_windows_variables)):
     os.system("terraform init -upgrade")
     os.system(generateApplyCommand(aws_windows_variables))
     os.chdir("..")
-else:
-    print("skipping \"aws-windows\" vm creation because you have not provided all required variables in input.json")
 
 if(validateVariables(azure_linux_required_variables,azure_linux_variables)):
     print(generateApplyCommand(azure_linux_variables))
@@ -65,8 +92,6 @@ if(validateVariables(azure_linux_required_variables,azure_linux_variables)):
     os.system("terraform init -upgrade")
     os.system(generateApplyCommand(azure_linux_variables))
     os.chdir("..")
-else:
-    print("skipping \"azure-linux\" vm creation because you have not provided all required variables in input.json")
 
 
 if(validateVariables(azure_windows_required_variables,azure_windows_variables)):
@@ -75,8 +100,6 @@ if(validateVariables(azure_windows_required_variables,azure_windows_variables)):
     os.system("terraform init -upgrade")
     os.system(generateApplyCommand(azure_windows_variables))
     os.chdir("..")
-else:
-    print("skipping \"azure-windows\" vm creation because you have not provided all required variables in input.json")
 
 
 if(validateVariables(gcp_linux_required_variables,gcp_linux_variables)):
@@ -85,8 +108,6 @@ if(validateVariables(gcp_linux_required_variables,gcp_linux_variables)):
     os.system("terraform init -upgrade")
     os.system(generateApplyCommand(gcp_linux_variables))
     os.chdir("..")
-else:
-    print("skipping \"gcp-linux\" vm creation because you have not provided all required variables in input.json")
 
 
 s = input("Enter \"yes\" without quotes to destroy all resources:  \n")
