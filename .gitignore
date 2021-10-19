@@ -4,4 +4,5 @@
 aws/terraform.tfvars
 azure/terraform.tfvars
 gcp/terraform.tfvars
-input.json
+
+*.json
