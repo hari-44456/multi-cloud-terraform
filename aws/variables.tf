@@ -50,3 +50,8 @@ variable user {
     description = "Specify default user associated with given ami_id"
     default = "ec2-user"
 }
+
+variable instance_type {
+    description = "Specify instance type"
+    default = "t2.micro"
+}
