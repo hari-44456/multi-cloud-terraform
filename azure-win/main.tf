@@ -1,24 +1,3 @@
-variable admin_username {
-  default="rahul"
-}
-variable admin_password {
-  default="Rahul@2410"
-}
-variable "connection_type" {
-  default="winrm"
-}
-variable "os_ms" {
-  description = "Operating System for Database (MSSQL) on the Production Environment"
-  type        = map(string)
-
-  default = {
-    publisher   =   "MicrosoftWindowsServer"
-    offer       =   "WindowsServer"
-    sku         =   "2019-Datacenter"
-    version     =   "latest"
-  }
-}
-
 resource "azurerm_resource_group" "main" {
   name     = "${var.prefix}-resources"
   location = var.location
@@ -26,7 +5,7 @@ resource "azurerm_resource_group" "main" {
 
 resource "azurerm_virtual_network" "main" {
   name                = "${var.prefix}-network"
-  address_space       = ["10.0.0.0/16"]
+  address_space       = [var.vpc_cidr_block]
   location            = azurerm_resource_group.main.location
   resource_group_name = azurerm_resource_group.main.name
 }
@@ -101,7 +80,7 @@ resource "azurerm_subnet" "internal" {
   name                 = "internal"
   resource_group_name  = azurerm_resource_group.main.name
   virtual_network_name = azurerm_virtual_network.main.name
-  address_prefixes     = ["10.0.2.0/24"]
+  address_prefixes     = [var.subnet_cidr_block]
 }
 
 resource "azurerm_public_ip" "main" {
@@ -134,7 +113,7 @@ resource "azurerm_virtual_machine" "main" {
   resource_group_name             = azurerm_resource_group.main.name
   location                        = azurerm_resource_group.main.location
   # size                            = "Standard_F2"
-  # admin_username                  = var.user
+  # user                  = var.user
   vm_size                         = "Standard_DS1_v2"
 
   delete_os_disk_on_termination = true
@@ -145,22 +124,23 @@ resource "azurerm_virtual_machine" "main" {
   ]
 
   storage_image_reference {
-    publisher = "${var.os_ms["publisher"]}"
-    offer     = "${var.os_ms["offer"]}"
-    sku       = "${var.os_ms["sku"]}"
-    version   = "${var.os_ms["version"]}"
+    publisher = var.publisher
+    offer     = var.offer
+    sku       = var.sku
+    version   = var.image_version
   }
+
   storage_os_disk {
-    name              = "RahulOS"
+    name              = "${var.prefix}OS"
     caching           = "ReadWrite"
     create_option     = "FromImage"
     managed_disk_type = "Standard_LRS"
   }
   
   os_profile {
-    computer_name  = "RahulOS"
-    admin_username = "${var.admin_username}"
-    admin_password = "${var.admin_password}"
+    computer_name  = "${var.user}"
+    admin_username = "${var.user}"
+    admin_password = "${var.password}"
     custom_data    = "${file("./files/winrm.ps1")}"
   }
   os_profile_windows_config {
@@ -174,7 +154,7 @@ resource "azurerm_virtual_machine" "main" {
       pass         = "oobeSystem"
       component    = "Microsoft-Windows-Shell-Setup"
       setting_name = "AutoLogon"
-      content      = "<AutoLogon><Password><Value>${var.admin_password}</Value></Password><Enabled>true</Enabled><LogonCount>1</LogonCount><Username>${var.admin_username}</Username></AutoLogon>"
+      content      = "<AutoLogon><Password><Value>${var.password}</Value></Password><Enabled>true</Enabled><LogonCount>1</LogonCount><Username>${var.user}</Username></AutoLogon>"
     }
     additional_unattend_config {
       pass         = "oobeSystem"
@@ -191,18 +171,18 @@ resource "azurerm_virtual_machine" "main" {
       port     = 5985
       https    = false
       timeout  = "5m"
-      user     = "${var.admin_username}"
-      password = "${var.admin_password}"
+      user     = "${var.user}"
+      password = "${var.password}"
     }
     inline = [
-      "mkdir helloworld",
+      "dir",
     ]
   }
   provisioner "local-exec" {
-    command="echo ansible_host_1 ansible_host=${azurerm_public_ip.main.ip_address} ansible_user=${var.admin_username} ansible_password=${var.admin_password} ansible_connection=${var.connection_type} ansible_winrm_server_cert_validation=ignore ansible_port=5985 > hosts"
+    command="echo ansible_host_1 ansible_host=${azurerm_public_ip.main.ip_address} ansible_user=${var.user} ansible_password=${var.password} ansible_connection=winrm ansible_winrm_server_cert_validation=ignore ansible_port=5985 > hosts"
   }
   provisioner "local-exec" {
-    command = "ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook -i hosts  playbook.yml"
+    command = "ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook -i hosts  ../ansible/windows_playbook.yml"
   }
   provisioner "local-exec" {
     command = "rm -rf hosts"

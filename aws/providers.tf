@@ -1,6 +1,5 @@
 provider "aws" {
-    region = "us-east-2"
-    // if not specified here then we have to set it via ennvironment variable or run aws configure
-    # access_key = ""
-    # secret_key = ""
+    region = var.region
+    access_key = var.access_key
+    secret_key = var.secret_key
 }

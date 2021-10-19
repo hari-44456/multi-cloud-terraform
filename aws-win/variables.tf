@@ -1,21 +1,34 @@
+variable "access_key" {
+    description = "Specify aws ACCESS_KEY"
+}
+
+variable "secret_key" {
+    description = "Specify aws SECRET_ACCESS_KEY"
+}
+
 variable public_key_location {
     description = "Specify location for your public key generated via (ssh-keygen)"
+    default = "~/.ssh/id_rsa.pub"
 }
 
 variable private_key_location {
     description = "Specify location for your private key generated via (ssh-keygen)"
+    default = "~/.ssh/id_rsa"
 }
 
-variable admin_username {
+variable user {
+  description = "Specify default user"
   default="narahari"
 }
 
-variable admin_password {
+variable password {
+  description = "Provide password for user"
   default="N@rahari12345!"
 }
 
 variable prefix {
     description = "The prefix which should be used for all resources"
+    default = "automation"
 }
 
 variable connection_type {
@@ -35,4 +48,20 @@ variable subnet_cidr_block {
 
 variable avail_zone {
     description = "Specify availability zone"
+    default = "us-east-2a"
+}
+
+variable "region" {
+    description = " Specify region"
+    default = "us-east-2"
+}
+
+variable "ami_id" {
+    description = "Provide windows ami id"
+    default = "ami-0428fc1ee1bde045a"
+}
+
+variable instance_type {
+    description = "Specify instance type"
+    default = "t2.micro"
 }

@@ -40,20 +40,6 @@ resource aws_security_group "myapp-sg" {
     }
 }
 
-data "aws_ami" "ubuntu" {
-  most_recent = true
-  owners= ["amazon"]
-  filter {
-      name = "name"
-      values = ["amzn2-ami-hvm-*-gp2"]
-  }
-
-  filter {
-      name = "virtualization-type"
-      values = ["hvm"]
-  }
-}
-
 resource "aws_key_pair" "deployer" {
   key_name   = "${var.prefix}-key"
   public_key = file(var.public_key_location)
@@ -61,8 +47,8 @@ resource "aws_key_pair" "deployer" {
 
 resource "aws_instance" "web" {
 
-  ami           = "ami-0428fc1ee1bde045a"
-  instance_type = "t2.micro"
+  ami           = var.ami_id
+  instance_type = var.instance_type
 
   key_name = aws_key_pair.deployer.key_name
 
@@ -73,8 +59,8 @@ resource "aws_instance" "web" {
 
    user_data     = <<EOF
     <powershell>
-    net user ${var.admin_username} '${var.admin_password}' /add /y
-    net localgroup administrators ${var.admin_username} /add
+    net user ${var.user} '${var.password}' /add /y
+    net localgroup administrators ${var.user} /add
     winrm quickconfig -q
     winrm set winrm/config/winrs '@{MaxMemoryPerShellMB="300"}'
     winrm set winrm/config '@{MaxTimeoutms="1800000"}'
@@ -101,18 +87,18 @@ resource "aws_instance" "web" {
       port     = 5985
       https    = false
       timeout  = "5m"
-      user     = "${var.admin_username}"
-      password = "${var.admin_password}"
+      user     = "${var.user}"
+      password = "${var.password}"
     }
     inline = [
       "mkdir helloworld",
     ]
   }
   provisioner "local-exec" {
-    command="echo ansible_host_1 ansible_host=${self.public_ip} ansible_user=${var.admin_username} ansible_password=${var.admin_password} ansible_connection=${var.connection_type} ansible_winrm_server_cert_validation=ignore ansible_port=5985 > hosts"
+    command="echo ansible_host_1 ansible_host=${self.public_ip} ansible_user=${var.user} ansible_password=${var.password} ansible_connection=${var.connection_type} ansible_winrm_server_cert_validation=ignore ansible_port=5985 > hosts"
   }
   provisioner "local-exec" {
-    command = "ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook -i hosts  playbook.yml"
+    command = "ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook -i hosts  ../ansible/windows_playbook.yml"
   }
   provisioner "local-exec" {
     command = "rm -rf hosts"
