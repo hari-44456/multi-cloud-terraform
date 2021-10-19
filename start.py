@@ -16,6 +16,11 @@ def generateApplyCommand(pairs,st="apply"):
         str += "-var "+key+"=\""+value+"\" "
     return str;
 
+def destroyResources(dir,variables):
+    os.chdir(dir)
+    os.system(generateApplyCommand(variables,"destroy"))
+    os.system("..")
+
 
 aws_linux_required_variables = {  "access_key", "secret_key" }
 aws_windows_required_variables = {  "access_key", "secret_key" }
@@ -83,11 +88,6 @@ if(validateVariables(gcp_linux_required_variables,gcp_linux_variables)):
 else:
     print("skipping \"gcp-linux\" vm creation because you have not provided all required variables in input.json")
 
-
-def destroyResources(dir,variables):
-    os.chdir(dir)
-    os.system(generateApplyCommand(variables,"destroy"))
-    os.system("..")
 
 s = input("Enter \"yes\" without quotes to destroy all resources:  \n")
 
