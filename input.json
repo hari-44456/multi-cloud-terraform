@@ -1,26 +1,27 @@
 {
-    "aws_linux":{
-        "access_key": "xxxxxxxxxxxxxxxxxxxxxxxxx",
-        "secret_key" : "xxxxxxxxxxxxxxxxxxxxxxxxx"
-    },
-    "aws_windows" :{
-        "access_key": "xxxxxxxxxxxxxxxxxxxxxxxxx",
-        "secret_key" : "xxxxxxxxxxxxxxxxxxxxxxxxx"
-    },
-    "azure_linux":{
-        "client_secret":"xxxxxxxxxxxxxxxxxxxxxxxxx",
-        "client_id":"xxxxxxxxxxxxxxxxxxxxxxxxx",
-        "tenant_id":"xxxxxxxxxxxxxxxxxxxxxxxxx",
-        "subscription_id":"xxxxxxxxxxxxxxxxxxxxxxxxx"
-    },
-    "azure_windows":{
-        "client_secret":"xxxxxxxxxxxxxxxxxxxxxxxxx",
-        "client_id":"xxxxxxxxxxxxxxxxxxxxxxxxx",
-        "tenant_id":"xxxxxxxxxxxxxxxxxxxxxxxxx",
-        "subscription_id":"xxxxxxxxxxxxxxxxxxxxxxxxx"
-    },
-    "gcp_linux":{
-        "project":"xxxxxxxxxxxxxxxxxxxxxxxxx",
-        "service_account_credentials_file_location":"C:\\Users\\Narahari\\OneDrive\\Desktop\\gcp-service-account-key-narahari.json"
-    }
+	"aws_linux": {
+		"access_key": "AKIAZOLLOARNFETHJDVO",
+		"secret_key": "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"
+	},
+	"aws_windows": {
+		"access_key": "AKIAZOLLOARNFETHJDVO",
+		"secret_key": "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"
+	},
+	"azure_linux": {
+		"client_secret": "5lvb4oosbQ_qbU_iwq433E2q2c.S43Mt5f",
+		"client_id": "e6486d5b-46ad-47dc-8603-d963c91a4b42",
+		"tenant_id": "ab77d0b8-ab42-469a-ace5-7a30504a0538",
+		"subscription_id": "77d4478e-38cb-43dc-a5ba-049a62cc7c37"
+	},
+	"azure_windows": {
+		"client_secret": "5lvb4oosbQ_qbU_iwq433E2q2c.S43Mt5f",
+		"client_id": "e6486d5b-46ad-47dc-8603-d963c91a4b42",
+		"tenant_id": "ab77d0b8-ab42-469a-ace5-7a30504a0538",
+		"subscription_id": "77d4478e-38cb-43dc-a5ba-049a62cc7c37"
+	},
+	"gcp_linux": {
+		"project": "prathamesh",
+		"service_account_credentials_file_location": "/home/ubuntu/gcp_service_account.json",
+		"prefix": "terraform-ubuntu"
+	}
 }
