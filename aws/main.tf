@@ -67,7 +67,7 @@ resource "aws_key_pair" "deployer" {
 }
 
 resource "aws_instance" "web" {
-  ami           = data.aws_ami.ubuntu.id
+  ami           = "ami-0c1a7f89451184c8b"
   instance_type = "t2.micro"
   key_name = aws_key_pair.deployer.key_name
 
@@ -86,20 +86,20 @@ resource "aws_instance" "web" {
     connection {
       type = "ssh"
       host = self.public_ip
-      user = "ec2-user"
+      user = "ubuntu"
       private_key = file(var.private_key_location)
     }
   }
 
-  provisioner "local-exec" {
+ /* provisioner "local-exec" {
     command = "ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook -u ec2-user   -i ${self.public_ip}, --private-key ${var.private_key_location} playbook.yml"
-  }
+  }*/
 
   tags = {
     Name = "${var.prefix}-Terraform"
   }
 }
-resource  "aws_ami_from_instance" "ubuntu-ami" {
+/*resource  "aws_ami_from_instance" "ubuntu-ami" {
     name               = "${var.prefix}-ami"
     source_instance_id = "${aws_instance.web.id}"
 
@@ -111,4 +111,4 @@ resource  "aws_ami_from_instance" "ubuntu-ami" {
       Name = "${var.prefix}-ami"
   }
 
-}
+}*/

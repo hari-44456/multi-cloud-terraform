@@ -38,7 +38,7 @@
      
       - name: Copy Ps1 file for execution
         win_copy:
-            src: /Users/admin/Desktop/multi-cloud-terraform-hari/aws-win/script.ps1
+            src: ../ansible/script.ps1
             dest: C:\Temp\script.ps1
             remote_src: no
      

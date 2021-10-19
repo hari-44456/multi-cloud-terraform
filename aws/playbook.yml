@@ -1,11 +1,31 @@
 - name: Terraform and Ansible Integration
   hosts: all
-  
+  vars:
+    - apt_file: /etc/apt/sources.list.d/google-chrome.list
   tasks:
     - name: display host
       shell: echo $HOME
 
-    - name: Copy file to remote server
-      copy:
-        src: abc.txt
-        dest: $HOME/
+    - name: install Notepad++
+      shell: sudo snap install notepad-plus-plus
+
+    - name : install python3
+      shell : |
+        sudo apt --fix-broken install
+        sudo apt-get install -y python3
+    
+    - name : install chrome
+      shell: |
+        wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
+        sudo apt install -y ./google-chrome-stable_current_amd64.deb
+    - name: Install MongoDB
+      shell: |
+        sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv 9DA31620334BD75D9DCB49F368818C72E52529D4
+        sudo add-apt-repository 'deb [arch=amd64] https://repo.mongodb.org/apt/ubuntu bionic/mongodb-org/4.0 multiverse'
+        sudo apt-get update
+        sudo rm /var/lib/dpkg/lock-frontend
+        sudo apt-get install -y mongodb-org
+        sudo systemctl start mongod
+        sudo systemctl enable mongod
+
+ 
