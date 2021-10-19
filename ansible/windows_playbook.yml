@@ -16,28 +16,28 @@
         state: present
       when: ansible_os_family == 'Windows'
 
-    # - name: Add Notepad++ to Path Variable on Windows hosts
-    #   win_path:
-    #     elements:
-    #       - 'C:\Program Files\Notepad++'
-    #   when: ansible_os_family == 'Windows'
+    - name: Add Notepad++ to Path Variable on Windows hosts
+      win_path:
+        elements:
+          - 'C:\Program Files\Notepad++'
+      when: ansible_os_family == 'Windows'
 
-    # - name: Install Python
-    #   win_package:
-    #     path: https://www.python.org/ftp/python/3.7.0/python-3.7.0.exe
-    #     arguments: /install /passive /norestart
-    #     creates_path: 'C:\Program Files\Python3.7\python-3.7.0.exe'
-    #     state: present
-    #   when: ansible_os_family == 'Windows'
+    - name: Install Python
+      win_package:
+        path: https://www.python.org/ftp/python/3.7.0/python-3.7.0.exe
+        arguments: /install /passive /norestart
+        creates_path: 'C:\Program Files\Python3.7\python-3.7.0.exe'
+        state: present
+      when: ansible_os_family == 'Windows'
 
-    # - name: Add Python 3.7 to Path Variable on Windows hosts
-    #   win_path:
-    #     elements:
-    #       - 'C:\Program Files\Python3.7'
-    #   when: ansible_os_family == 'Windows'
+    - name: Add Python 3.7 to Path Variable on Windows hosts
+      win_path:
+        elements:
+          - 'C:\Program Files\Python3.7'
+      when: ansible_os_family == 'Windows'
 
-    # - name: Install Google Chrome
-    #   win_chocolatey:
-    #     name: googlechrome
-    #     state: present
-    #     ignore_checksums: yes
+    - name: Install Google Chrome
+      win_chocolatey:
+        name: googlechrome
+        state: present
+        ignore_checksums: yes
