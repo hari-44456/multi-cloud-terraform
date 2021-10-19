@@ -60,3 +60,8 @@ variable "ami_id" {
     description = "Provide windows ami id"
     default = "ami-0428fc1ee1bde045a"
 }
+
+variable instance_type {
+    description = "Specify instance type"
+    default = "t2.micro"
+}
