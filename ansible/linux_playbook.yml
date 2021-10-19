@@ -2,10 +2,9 @@
   hosts: all
   
   tasks:
-    - name: display host
-      shell: echo $HOME
-
-    - name: Copy file to remote server
-      copy:
-        src: abc.txt
-        dest: $HOME/
+    - name: Install MongoDB
+      become: yes
+      apt:
+        name: mongodb
+        state: present
+        update_cache: yes
