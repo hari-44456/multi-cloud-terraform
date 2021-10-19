@@ -47,28 +47,14 @@ resource aws_security_group "myapp-sg" {
     }
 }
 
-data "aws_ami" "ubuntu" {
-  most_recent = true
-  owners= ["amazon"]
-  filter {
-      name = "name"
-      values = ["amzn2-ami-hvm-*-gp2"]
-  }
-
-  filter {
-      name = "virtualization-type"
-      values = ["hvm"]
-  }
-}
-
 resource "aws_key_pair" "deployer" {
   key_name   = "${var.prefix}-key"
   public_key = file(var.public_key_location)
 }
 
 resource "aws_instance" "web" {
-  ami           = data.aws_ami.ubuntu.id
-  instance_type = "t2.micro"
+  ami           = var.ami_id
+  instance_type = var.instance_type
   key_name = aws_key_pair.deployer.key_name
 
   subnet_id = module.vpc.public_subnets[0]
@@ -86,13 +72,13 @@ resource "aws_instance" "web" {
     connection {
       type = "ssh"
       host = self.public_ip
-      user = "ec2-user"
+      user = var.user
       private_key = file(var.private_key_location)
     }
   }
 
   provisioner "local-exec" {
-    command = "ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook -u ec2-user   -i ${self.public_ip}, --private-key ${var.private_key_location} playbook.yml"
+    command = "ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook -u ${var.user}   -i ${self.public_ip}, --private-key ${var.private_key_location} ../ansible/linux_playbook.yml"
   }
 
   tags = {

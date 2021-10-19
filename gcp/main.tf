@@ -1,16 +1,3 @@
-resource "google_compute_firewall" "firewall" {
-  name    = "${var.prefix}-firewall-externalssh"
-  network = "default"
-
-  allow {
-    protocol = "tcp"
-    ports    = ["22"]
-  }
-
-  source_ranges = ["0.0.0.0/0"] 
-  target_tags   = ["externalssh"]
-}
-
 resource "google_compute_firewall" "webserverrule" {
   name    = "${var.prefix}-webserver"
   network = "default"
@@ -25,21 +12,19 @@ resource "google_compute_firewall" "webserverrule" {
 }
 
 resource "google_compute_address" "static" {
-  name = "vm-public-address"
-  project = var.project
-  region = var.region
-  depends_on = [ google_compute_firewall.firewall ]
+  name = "${var.prefix}-public-address"
+  depends_on = [ google_compute_firewall.webserverrule ]
 }
 
 resource "google_compute_instance" "dev" {
   name         = "${var.prefix}-vm"
-  machine_type = "f1-micro"
-  zone         = "${var.region}-a"
-  tags         = ["externalssh","webserver"]
+  machine_type = var.machine_type
+  zone         = var.zone
+  tags         = ["webserver"]
 
   boot_disk {
     initialize_params {
-      image = "centos-cloud/centos-7"
+      image = var.boot_image
     }
   }
 
@@ -67,10 +52,10 @@ resource "google_compute_instance" "dev" {
   }
 
    provisioner "local-exec" {
-    command = "ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook -u ${var.user}   -i ${google_compute_address.static.address}, --private-key ${var.private_key_location} playbook.yml"
+    command = "ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook -u ${var.user}   -i ${google_compute_address.static.address}, --private-key ${var.private_key_location} ../ansible/linux_playbook.yml"
   }
 
-  depends_on = [ google_compute_firewall.firewall, google_compute_firewall.webserverrule ]
+  depends_on = [ google_compute_firewall.webserverrule ]
 
   metadata = {
     ssh-keys = "${var.user}:${file(var.public_key_location)}"
