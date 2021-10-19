@@ -72,13 +72,13 @@ resource "aws_instance" "web" {
     connection {
       type = "ssh"
       host = self.public_ip
-      user = "ec2-user"
+      user = var.user
       private_key = file(var.private_key_location)
     }
   }
 
   provisioner "local-exec" {
-    command = "ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook -u ec2-user   -i ${self.public_ip}, --private-key ${var.private_key_location} playbook.yml"
+    command = "ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook -u ${var.user}   -i ${self.public_ip}, --private-key ${var.private_key_location} playbook.yml"
   }
 
   tags = {

@@ -45,3 +45,8 @@ variable "ami_id" {
     description = "Specify linux ami id"
     default = "ami-074cce78125f09d61"
 }
+
+variable user {
+    description = "Specify default user associated with given ami_id"
+    default = "ec2-user"
+}
