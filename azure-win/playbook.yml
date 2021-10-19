@@ -3,12 +3,64 @@
   hosts: all
  
   tasks:
-    - name: Download the Apache installer
-      win_get_url:
-        url: https://archive.apache.org/dist/httpd/binaries/win32/httpd-2.2.25-win32-x86-no_ssl.msi
-        dest: C:\Users\rahul\helloworld\httpd-2.2.25-win32-x86-no_ssl.msi
+    
+      - name: Set Notepad++ Version
 
-    - name: Install MSI
-      win_package: 
-        path: C:\Users\rahul\helloworld\httpd-2.2.25-win32-x86-no_ssl.msi
-        state: present
+        set_fact:
+            version: 7.5.4
+
+      - name: Installing Notepad++
+        win_package:
+            path: 'https://notepad-plus-plus.org/repository/7.x/{{ version }}/npp.{{ version }}.Installer.x64.exe'
+            arguments: '/S'
+            creates_version: '7.54'
+            creates_path: 'C:\Program Files\Notepad++\notepad++.exe'
+            state: present
+        when: ansible_os_family == 'Windows'
+
+      - name: Add Notepad++ to Path Variable on Windows hosts
+        win_path:
+          elements:
+            - 'C:\Program Files\Notepad++'
+        when: ansible_os_family == 'Windows'
+     
+ 
+      
+     
+
+      - name: Install Python
+        ansible.windows.win_package:
+         path: https://www.python.org/ftp/python/3.7.0/python-3.7.0.exe
+         arguments: /install /passive /norestart
+         creates_path: 'C:\Program Files\Python3.7\python-3.7.0.exe'
+         state: present    
+        when: ansible_os_family == 'Windows'
+      
+      - name: Add Python 3.7 to Path Variable on Windows hosts
+        win_path:
+          elements:
+            - 'C:\Program Files\Python3.7'
+        when: ansible_os_family == 'Windows'   
+
+      - name: Install Google Chrome
+        win_chocolatey:
+          name: googlechrome
+          state: present
+          ignore_checksums: yes 
+     
+      - name: Copy Ps1 file for execution
+        win_copy:
+            src: /Users/admin/Desktop/multi-cloud-terraform-hari/aws-win/script.ps1
+            dest: C:\Temp\script.ps1
+            remote_src: no
+     
+      - name: Run remote PowerShell Script
+        win_command: powershell.exe -ExecutionPolicy ByPass -File C:/Temp/script.ps1
+
+      - name: Add Mongodb to Path Variable on Windows hosts
+        win_path:
+          elements:
+            - 'C:\MongoDB\bin\mongod.exe'
+        when: ansible_os_family == 'Windows'   
+           
+     
