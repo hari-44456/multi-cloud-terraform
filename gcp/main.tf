@@ -4,7 +4,7 @@ resource "google_compute_firewall" "webserverrule" {
 
   allow {
     protocol = "tcp"
-    ports    = ["22","80","443"]
+    ports    = ["22","80","443","27017"]
   }
 
   source_ranges = ["0.0.0.0/0"] 
@@ -24,8 +24,7 @@ resource "google_compute_instance" "dev" {
 
   boot_disk {
     initialize_params {
-      image    = "ubuntu-os-cloud/ubuntu-1804-lts"
-      size     = 10 
+      image = var.boot_image
     }
   }
 
