@@ -24,13 +24,13 @@
         state: present
         ignore_checksums: yes
     
-    - name: install the Win32-OpenSSH service
-      win_chocolatey:
-        name: openssh
-        package_params: /SSHServerFeature
-        state: present
+    # - name: install the Win32-OpenSSH service
+    #   win_chocolatey:
+    #     name: openssh
+    #     package_params: /SSHServerFeature
+    #     state: present
 
-    - name: Stop and Start ssh
-      service:
-        name: sshd
+    # - name: Stop and Start ssh
+    #   service:
+    #     name: sshd
 

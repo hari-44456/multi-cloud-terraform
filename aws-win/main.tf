@@ -112,3 +112,10 @@ resource "aws_instance" "web" {
     Name = "${var.prefix}-Terraform"
   }
 }
+resource "aws_ami_from_instance" "ami" {
+  name               = "win_ami"
+  source_instance_id = aws_instance.web.id
+  depends_on = [
+    aws_instance.web
+  ]
+}
