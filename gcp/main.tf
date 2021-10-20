@@ -24,7 +24,8 @@ resource "google_compute_instance" "dev" {
 
   boot_disk {
     initialize_params {
-      image = var.boot_image
+      image    = "ubuntu-os-cloud/ubuntu-1804-lts"
+      size     = 10 
     }
   }
 
