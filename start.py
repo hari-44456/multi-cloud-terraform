@@ -21,7 +21,7 @@ def generateApplyCommand(pairs,st="apply"):
 def destroyResources(dir,variables):
     os.chdir(dir)
     os.system(generateApplyCommand(variables,"destroy"))
-    os.system("..")
+    os.chdir("..")
 
 
 aws_linux_required_variables = {  "access_key", "secret_key" }

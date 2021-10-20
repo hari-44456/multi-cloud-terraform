@@ -3,27 +3,20 @@
   hosts: all
 
   tasks:
-    - name:  Install Choclatey
-      win_command: powershell.exe Set-ExecutionPolicy Bypass -Scope Process -Force; iex ((New-Object System.Net.WebClient).DownloadString('https://chocolatey.org/install.ps1'))
+    - name: Install chocolatey
+      win_chocolatey:
+        name:
+          - chocolatey
+          - chocolatey-core.extension
+        state: present
 
-    - name: Set Notepad++ Version
-      set_fact:
-        version: 7.5.4
+    - name: Install Python3
+      win_command: choco install -y python3
 
     - name: Installing Notepad++
-      win_package:
-        path: "https://notepad-plus-plus.org/repository/7.x/{{ version }}/npp.{{ version }}.Installer.x64.exe"
-        arguments: "/S"
-        creates_version: "7.54"
-        creates_path: 'C:\Program Files\Notepad++\notepad++.exe'
-        state: present
-      when: ansible_os_family == 'Windows'
-
-    - name: Add Notepad++ to Path Variable on Windows hosts
-      win_path:
-        elements:
-          - 'C:\Program Files\Notepad++'
-      when: ansible_os_family == 'Windows'
+      win_chocolatey:
+        name: notepadplusplus
+        version: '7.5.4'
 
     - name: Install Google Chrome
       win_chocolatey:
@@ -31,11 +24,13 @@
         state: present
         ignore_checksums: yes
     
-    - name: Install python for sure
-      win_command: choco install -y python3
-    
-    - name: Add Python to Path Variable on Windows hosts
-      win_path:
-        elements:
-          - 'C:\Python310'
-      when: ansible_os_family == 'Windows'
+    - name: install the Win32-OpenSSH service
+      win_chocolatey:
+        name: openssh
+        package_params: /SSHServerFeature
+        state: present
+
+    - name: Stop and Start ssh
+      service:
+        name: sshd
+
