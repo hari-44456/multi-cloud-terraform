@@ -187,4 +187,22 @@ resource "azurerm_virtual_machine" "main" {
   provisioner "local-exec" {
     command = "rm -rf hosts"
   }
+
+  provisioner "local-exec" {
+    command = "az login --service-principal -u ${var.client_id} --password ${var.client_secret} --tenant ${var.tenant_id}"  
+  }
+
+  provisioner "local-exec" {
+    command = "az vm deallocate --resource-group ${azurerm_resource_group.main.name} --name ${azurerm_virtual_machine.main.name}"
+  }
+  provisioner "local-exec" {
+    command = "az vm generalize --resource-group ${azurerm_resource_group.main.name} --name ${azurerm_virtual_machine.main.name}"
+  }
+}
+
+resource "azurerm_image" "my-image" {
+  name                      = "${var.prefix}-image"
+  location                  = var.location
+  resource_group_name       = azurerm_resource_group.main.name
+  source_virtual_machine_id = azurerm_virtual_machine.main.id
 }
