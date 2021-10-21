@@ -3,41 +3,34 @@
   hosts: all
 
   tasks:
-    - name: Set Notepad++ Version
-      set_fact:
-        version: 7.5.4
+    - name: Install chocolatey
+      win_chocolatey:
+        name:
+          - chocolatey
+          - chocolatey-core.extension
+        state: present
+
+    - name: Install Python3
+      win_command: choco install -y python3
 
     - name: Installing Notepad++
-      win_package:
-        path: "https://notepad-plus-plus.org/repository/7.x/{{ version }}/npp.{{ version }}.Installer.x64.exe"
-        arguments: "/S"
-        creates_version: "7.54"
-        creates_path: 'C:\Program Files\Notepad++\notepad++.exe'
-        state: present
-      when: ansible_os_family == 'Windows'
-
-    - name: Add Notepad++ to Path Variable on Windows hosts
-      win_path:
-        elements:
-          - 'C:\Program Files\Notepad++'
-      when: ansible_os_family == 'Windows'
-
-    - name: Install Python
-      win_package:
-        path: https://www.python.org/ftp/python/3.7.0/python-3.7.0.exe
-        arguments: /install /passive /norestart
-        creates_path: 'C:\Program Files\Python3.7\python-3.7.0.exe'
-        state: present
-      when: ansible_os_family == 'Windows'
-
-    - name: Add Python 3.7 to Path Variable on Windows hosts
-      win_path:
-        elements:
-          - 'C:\Program Files\Python3.7'
-      when: ansible_os_family == 'Windows'
+      win_chocolatey:
+        name: notepadplusplus
+        version: '7.5.4'
 
     - name: Install Google Chrome
       win_chocolatey:
         name: googlechrome
         state: present
         ignore_checksums: yes
+    
+    # - name: install the Win32-OpenSSH service
+    #   win_chocolatey:
+    #     name: openssh
+    #     package_params: /SSHServerFeature
+    #     state: present
+
+    # - name: Stop and Start ssh
+    #   service:
+    #     name: sshd
+

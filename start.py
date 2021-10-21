@@ -21,7 +21,7 @@ def generateApplyCommand(pairs,st="apply"):
 def destroyResources(dir,variables):
     os.chdir(dir)
     os.system(generateApplyCommand(variables,"destroy"))
-    os.system("..")
+    os.chdir("..")
 
 
 aws_linux_required_variables = {  "access_key", "secret_key" }
@@ -72,34 +72,34 @@ except:
     print("skipping \"gcp-linux\" vm creation because you have not provided all required variables in input.json")
 
 
-if(validateVariables(aws_linux_required_variables,aws_linux_variables)):
-    print(generateApplyCommand(aws_linux_variables))
-    os.chdir("aws")
-    os.system("terraform init -upgrade")
-    os.system(generateApplyCommand(aws_linux_variables))
-    os.chdir("..")
+# if(validateVariables(aws_linux_required_variables,aws_linux_variables)):
+#     print(generateApplyCommand(aws_linux_variables))
+#     os.chdir("aws")
+#     os.system("terraform init -upgrade")
+#     os.system(generateApplyCommand(aws_linux_variables))
+#     os.chdir("..")
 
-if(validateVariables(aws_windows_required_variables,aws_windows_variables)):
-    print(generateApplyCommand(aws_windows_variables))
-    os.chdir("aws-win")
-    os.system("terraform init -upgrade")
-    os.system(generateApplyCommand(aws_windows_variables))
-    os.chdir("..")
+# if(validateVariables(aws_windows_required_variables,aws_windows_variables)):
+#     print(generateApplyCommand(aws_windows_variables))
+#     os.chdir("aws-win")
+#     os.system("terraform init -upgrade")
+#     os.system(generateApplyCommand(aws_windows_variables))
+#     os.chdir("..")
 
-if(validateVariables(azure_linux_required_variables,azure_linux_variables)):
-    print(generateApplyCommand(azure_linux_variables))
-    os.chdir("azure")
-    os.system("terraform init -upgrade")
-    os.system(generateApplyCommand(azure_linux_variables))
-    os.chdir("..")
+# if(validateVariables(azure_linux_required_variables,azure_linux_variables)):
+#     print(generateApplyCommand(azure_linux_variables))
+#     os.chdir("azure")
+#     os.system("terraform init -upgrade")
+#     os.system(generateApplyCommand(azure_linux_variables))
+#     os.chdir("..")
 
 
-if(validateVariables(azure_windows_required_variables,azure_windows_variables)):
-    print(generateApplyCommand(azure_windows_variables))
-    os.chdir("azure-win")
-    os.system("terraform init -upgrade")
-    os.system(generateApplyCommand(azure_windows_variables))
-    os.chdir("..")
+# if(validateVariables(azure_windows_required_variables,azure_windows_variables)):
+#     print(generateApplyCommand(azure_windows_variables))
+#     os.chdir("azure-win")
+#     os.system("terraform init -upgrade")
+#     os.system(generateApplyCommand(azure_windows_variables))
+#     os.chdir("..")
 
 
 if(validateVariables(gcp_linux_required_variables,gcp_linux_variables)):
@@ -110,16 +110,16 @@ if(validateVariables(gcp_linux_required_variables,gcp_linux_variables)):
     os.chdir("..")
 
 
-s = input("Enter \"yes\" without quotes to destroy all resources:  \n")
+# s = input("Enter \"yes\" without quotes to destroy all resources:  \n")
 
-if(s != "yes"):
-    exit(0)
+# if(s != "yes"):
+#     exit(0)
 
-destroyResources("aws",aws_linux_variables)
-destroyResources("aws-win",aws_windows_variables)
+# destroyResources("aws",aws_linux_variables)
+# destroyResources("aws-win",aws_windows_variables)
 
-destroyResources("azure",azure_linux_variables)
-destroyResources("azure-win",azure_windows_variables)
+# destroyResources("azure",azure_linux_variables)
+# destroyResources("azure-win",azure_windows_variables)
 
-destroyResources("gcp",gcp_linux_variables)
+# destroyResources("gcp",gcp_linux_variables)
     
