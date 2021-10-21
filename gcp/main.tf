@@ -1,3 +1,8 @@
+provider "google-beta" {
+  credentials = "${file("/home/narahari/gcp_cred.json")}"
+  project     = "prathamesh"
+  region      = "asia-south1"
+}
 resource "google_compute_firewall" "webserverrule" {
   name    = "${var.prefix}-webserver"
   network = "default"
@@ -17,6 +22,7 @@ resource "google_compute_address" "static" {
 }
 
 resource "google_compute_instance" "dev" {
+  provider     = google-beta
   name         = "${var.prefix}-vm"
   machine_type = var.machine_type
   zone         = var.zone
@@ -60,4 +66,11 @@ resource "google_compute_instance" "dev" {
   metadata = {
     ssh-keys = "${var.user}:${file(var.public_key_location)}"
   }
+}
+
+resource "google_compute_machine_image" "image" {
+  provider        = google-beta
+  name            = "image"
+  source_instance = google_compute_instance.dev.self_link
+  depends_on = [google_compute_instance.dev]
 }
