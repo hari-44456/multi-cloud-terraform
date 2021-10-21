@@ -1,8 +1,3 @@
-provider "google-beta" {
-  credentials = "${file("/home/narahari/gcp_cred.json")}"
-  project     = "prathamesh"
-  region      = "asia-south1"
-}
 resource "google_compute_firewall" "webserverrule" {
   name    = "${var.prefix}-webserver"
   network = "default"
@@ -70,7 +65,7 @@ resource "google_compute_instance" "dev" {
 
 resource "google_compute_machine_image" "image" {
   provider        = google-beta
-  name            = "image"
+  name            = "${var.prefix}-image"
   source_instance = google_compute_instance.dev.self_link
   depends_on = [google_compute_instance.dev]
 }
