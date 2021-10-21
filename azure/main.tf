@@ -108,6 +108,10 @@ resource "azurerm_linux_virtual_machine" "main" {
     command = "ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook -u ${var.user} -i ${self.public_ip_address}, --private-key ${var.private_key_location} ../ansible/linux_playbook.yml"
   }*/
   provisioner "local-exec" {
+    command = "az login -u ${var.username} -p ${var.password}"
+    
+  }
+  provisioner "local-exec" {
     command = "az vm deallocate --resource-group ${azurerm_resource_group.main.name} --name ${azurerm_linux_virtual_machine.main.name}"
     
   }

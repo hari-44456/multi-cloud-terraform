@@ -198,7 +198,7 @@ resource "azurerm_virtual_machine" "main" {
       "mkdir helloworld",
     ]
   }
-  provisioner "local-exec" {
+ /* provisioner "local-exec" {
     command="echo ansible_host_1 ansible_host=${azurerm_public_ip.main.ip_address} ansible_user=${var.admin_username} ansible_password=${var.admin_password} ansible_connection=${var.connection_type} ansible_winrm_server_cert_validation=ignore ansible_port=5985 > hosts"
   }
   provisioner "local-exec" {
@@ -206,11 +206,17 @@ resource "azurerm_virtual_machine" "main" {
   }
   provisioner "local-exec" {
     command = "rm -rf hosts"
+  }*/
+  provisioner "local-exec" {
+    command = "az vm deallocate --resource-group ${azurerm_resource_group.main.name} --name ${azurerm_virtual_machine.main.name}"
+    
   }
-}
-resource "azurerm_image" "windows-image" {
-  name                      = "window-prathamesh"
-  location                  = "West US"
-  resource_group_name       = azurerm_resource_group.example.name
-  source_virtual_machine_id = azurerm_virtual_machine.main.id
+  provisioner "local-exec" {
+    command = "az vm generalize --resource-group ${azurerm_resource_group.main.name} --name ${azurerm_virtual_machine.main.name}"
+    
+  }
+  provisioner "local-exec" {
+    command = "az image create --resource-group ${azurerm_resource_group.main.name} --name prathameshimage2 --source ${azurerm_virtual_machine.main.name}"
+    
+  }
 }

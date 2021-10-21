@@ -62,3 +62,10 @@ variable "image_version" {
     description = "specify source image reference version"
     default   = "latest" 
 }
+variable "username" {
+    default = "naraharipapshetwar@gmail.com "
+
+}
+variable "password" {
+    default = "Hari@2018BTECS00012"
+}
