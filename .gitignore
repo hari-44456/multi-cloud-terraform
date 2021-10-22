@@ -1,0 +1,8 @@
+*/.terraform
+*/.terraform.*
+
+aws/terraform.tfvars
+azure/terraform.tfvars
+gcp/terraform.tfvars
+
+*.json

@@ -1,0 +1,5 @@
+public_key_location = "~/.ssh/id_rsa.pub"
+private_key_location = "~/.ssh/id_rsa"
+user = "prathamesh"
+prefix = "prathamesh"
+location = "westeurope"
