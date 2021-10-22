@@ -218,10 +218,15 @@ resource "null_resource" "next" {
   depends_on = [time_sleep.wait_300_seconds]
 }
 
+resource "azurerm_resource_group" "for_image_storage" {
+  name     = "${var.prefix}-image-resources"
+  location = var.location
+}
+
 resource "azurerm_image" "my-image" {
   name                      = "${var.prefix}-image"
   location                  = var.location
-  resource_group_name       = azurerm_resource_group.main.name
+  resource_group_name       = azurerm_resource_group.for_image_storage.name
   source_virtual_machine_id = azurerm_virtual_machine.main.id
 
   depends_on = [null_resource.next]
