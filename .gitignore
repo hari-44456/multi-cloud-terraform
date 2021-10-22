@@ -6,3 +6,4 @@ azure/terraform.tfvars
 gcp/terraform.tfvars
 
 *.json
+*/terraform.*
