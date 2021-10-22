@@ -62,3 +62,8 @@ variable "image_version" {
     description = "specify source image reference version"
     default   = "latest" 
 }
+
+variable vm_size {
+    description = "Specify vm size"
+    default = "Standard_DS1_v2"
+}
