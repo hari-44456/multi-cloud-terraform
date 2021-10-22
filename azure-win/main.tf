@@ -224,5 +224,5 @@ resource "azurerm_image" "my-image" {
   resource_group_name       = azurerm_resource_group.main.name
   source_virtual_machine_id = azurerm_virtual_machine.main.id
 
-  depends_on = [time_sleep.wait_300_seconds]
+  depends_on = [null_resource.next]
 }
