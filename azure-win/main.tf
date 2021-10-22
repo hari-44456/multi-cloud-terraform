@@ -77,7 +77,7 @@ resource "azurerm_network_security_group" "example" {
 }
 
 resource "azurerm_subnet" "internal" {
-  name                 = "internal"
+  name                 = "${var.prefix}-subnet"
   resource_group_name  = azurerm_resource_group.main.name
   virtual_network_name = azurerm_virtual_network.main.name
   address_prefixes     = [var.subnet_cidr_block]
@@ -96,7 +96,7 @@ resource "azurerm_network_interface" "main" {
   location            = azurerm_resource_group.main.location
 
   ip_configuration {
-    name                          = "internal"
+    name                          = "${var.prefix}-ip-conf"
     subnet_id                     = azurerm_subnet.internal.id
     private_ip_address_allocation = "Dynamic"
     public_ip_address_id          = azurerm_public_ip.main.id
@@ -112,8 +112,6 @@ resource "azurerm_virtual_machine" "main" {
   name                            = "${var.prefix}-vm"
   resource_group_name             = azurerm_resource_group.main.name
   location                        = azurerm_resource_group.main.location
-  # size                            = "Standard_F2"
-  # user                  = var.user
   vm_size                         = "Standard_DS1_v2"
 
   delete_os_disk_on_termination = true
@@ -192,12 +190,32 @@ resource "azurerm_virtual_machine" "main" {
     command = "az login --service-principal -u ${var.client_id} --password ${var.client_secret} --tenant ${var.tenant_id}"  
   }
 
-  provisioner "local-exec" {
-    command = "az vm deallocate --resource-group ${azurerm_resource_group.main.name} --name ${azurerm_virtual_machine.main.name}"
+  provisioner "remote-exec" {
+    connection {
+      host     = "${azurerm_public_ip.main.ip_address}"
+      type     = "winrm"
+      port     = 5985
+      https    = false
+      timeout  = "5m"
+      user     = "${var.user}"
+      password = "${var.password}"
+    }
+    inline = [
+      "C:\\Windows\\System32\\Sysprep\\Sysprep.exe /generalize /oobe /shutdown",
+    ]
   }
+}
+
+resource "time_sleep" "wait_300_seconds" {
+  depends_on = [azurerm_virtual_machine.main]
+  create_duration = "300s"
+}
+
+resource "null_resource" "next" {
   provisioner "local-exec" {
     command = "az vm generalize --resource-group ${azurerm_resource_group.main.name} --name ${azurerm_virtual_machine.main.name}"
   }
+  depends_on = [time_sleep.wait_300_seconds]
 }
 
 resource "azurerm_image" "my-image" {
@@ -205,4 +223,6 @@ resource "azurerm_image" "my-image" {
   location                  = var.location
   resource_group_name       = azurerm_resource_group.main.name
   source_virtual_machine_id = azurerm_virtual_machine.main.id
+
+  depends_on = [time_sleep.wait_300_seconds]
 }
