@@ -128,9 +128,12 @@ resource "aws_instance" "web" {
   provisioner "local-exec" {
     command = "ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook -i hosts  ../ansible/windows_playbook.yml"
   }
-  # provisioner "local-exec" {
-  #   command = "rm -rf hosts"
-  # }
+  provisioner "local-exec" {
+    command = "ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook -i hosts  ../ansible/Openssh.yml"
+  }
+  provisioner "local-exec" {
+     command = "rm -rf hosts"
+   }
 
   tags = {
     Name = "${var.prefix}-Terraform"
