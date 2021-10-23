@@ -18,7 +18,7 @@ variable private_key_location {
 
 variable user {
   description = "Specify default user"
-  default="narahari"
+  default="automation"
 }
 
 variable password {

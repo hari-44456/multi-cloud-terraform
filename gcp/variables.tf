@@ -28,7 +28,7 @@ variable private_key_location {
 
 variable user {
     description = "Specify user's name that will be used for creating VM's"
-    default = "narahari"
+    default = "automation"
 }
 
 variable prefix {
