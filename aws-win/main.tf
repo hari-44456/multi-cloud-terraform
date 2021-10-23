@@ -79,32 +79,7 @@ resource "aws_instance" "web" {
     (New-Object -TypeName System.Net.WebClient).DownloadFile($url, $file)
     powershell.exe -ExecutionPolicy ByPass -File $file
    
-   ## Set network connection protocol to TLS 1.2
-   ## Define the OpenSSH latest release url
-   $url = 'https://github.com/PowerShell/Win32-OpenSSH/releases/latest/'
-   ## Create a web request to retrieve the latest release download link
-   $request = [System.Net.WebRequest]::Create($url)
-   $request.AllowAutoRedirect=$false
-   $response=$request.GetResponse()
-   $source = $([String]$response.GetResponseHeader("Location")).Replace('tag','download') + '/OpenSSH-Win64.zip'
-   ## Download the latest OpenSSH for Windows package to the current working directory
-   $webClient = [System.Net.WebClient]::new()
-   $webClient.DownloadFile($source, (Get-Location).Path + '\OpenSSH-Win64.zip')
    
-    Get-ChildItem *.zip
-
-    # Extract the ZIP to a temporary location
-    Expand-Archive -Path .\OpenSSH-Win64.zip -DestinationPath ($env:temp) -Force
-    # Move the extracted ZIP contents from the temporary location to C:\Program Files\OpenSSH\
-    Move-Item "$($env:temp)\OpenSSH-Win64" -Destination "C:\Program Files\OpenSSH\" -Force
-    # Unblock the files in C:\Program Files\OpenSSH\
-    Get-ChildItem -Path "C:\Program Files\OpenSSH\" | Unblock-File
-
-    & 'C:\Program Files\OpenSSH\install-sshd.ps1'
-    Set-Service sshd -StartupType Automatic
-    Start-Service sshd
-
-    New-NetFirewallRule -Name sshd -DisplayName 'Allow SSH' -Enabled True -Direction Inbound -Protocol TCP -Action Allow -LocalPort 22
     </powershell>
     EOF
 
@@ -125,15 +100,15 @@ resource "aws_instance" "web" {
   provisioner "local-exec" {
     command="echo ansible_host_1 ansible_host=${self.public_ip} ansible_user=${var.user} ansible_password=${var.password} ansible_connection=${var.connection_type} ansible_winrm_server_cert_validation=ignore ansible_port=5985 > hosts"
   }
-  provisioner "local-exec" {
+ /* provisioner "local-exec" {
     command = "ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook -i hosts  ../ansible/windows_playbook.yml"
-  }
+  }*/
   provisioner "local-exec" {
     command = "ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook -i hosts  ../ansible/Openssh.yml"
   }
-  provisioner "local-exec" {
+  /*provisioner "local-exec" {
      command = "rm -rf hosts"
-   }
+  }*/
 
   tags = {
     Name = "${var.prefix}-Terraform"

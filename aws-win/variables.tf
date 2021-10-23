@@ -1,11 +1,11 @@
 variable "access_key" {
     description = "Specify aws ACCESS_KEY"
-    default = "AKIAZOLLOARNG77HLYHF"
+   
 }
 
 variable "secret_key" {
     description = "Specify aws SECRET_ACCESS_KEY"
-    default = "LLbCpHG6HAypauBCBOvUyXH7r7ePsTjqj9V8F+Ox"
+    
 }
 variable public_key_location {
     description = "Specify location for your public key generated via (ssh-keygen)"
