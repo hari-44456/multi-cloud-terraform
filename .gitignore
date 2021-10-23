@@ -1,7 +1,9 @@
-aws/.terraform
-gcp/.terraform
-azure/.terraform
+*/.terraform
+*/.terraform.*
 
 aws/terraform.tfvars
 azure/terraform.tfvars
 gcp/terraform.tfvars
+
+*.json
+*/terraform.*

@@ -1,6 +1,13 @@
 provider "google" {
-  // run gcloud auth application-default login
-  project = var.project
-  region  = var.region
-  zone =  "${var.region}-a"
+  project     = var.project
+  credentials = file(var.service_account_credentials_file_location)
+  region      = var.region
+  zone        = var.zone
+}
+
+provider "google-beta" {
+  project     = var.project
+  credentials = file(var.service_account_credentials_file_location)
+  region      = var.region
+  zone        = var.zone
 }
