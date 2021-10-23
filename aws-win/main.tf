@@ -71,16 +71,40 @@ resource "aws_instance" "web" {
     net stop winrm
     sc.exe config winrm start=auto
     net start winrm
-    Add-WindowsCapability -Online -Name OpenSSH.Client~~~~0.0.1.0
-    Add-WindowsCapability -Online -Name OpenSSH.Server~~~~0.0.1.0
-    Start-Service sshd
-    Set-Service -Name sshd -StartupType 'Automatic'
+    
     
     Write-Host "Config custom"
     $url = "https://raw.githubusercontent.com/ansible/ansible/devel/examples/scripts/ConfigureRemotingForAnsible.ps1"
     $file = "$env:temp\ConfigureRemotingForAnsible.ps1"
     (New-Object -TypeName System.Net.WebClient).DownloadFile($url, $file)
     powershell.exe -ExecutionPolicy ByPass -File $file
+   
+   ## Set network connection protocol to TLS 1.2
+   ## Define the OpenSSH latest release url
+   $url = 'https://github.com/PowerShell/Win32-OpenSSH/releases/latest/'
+   ## Create a web request to retrieve the latest release download link
+   $request = [System.Net.WebRequest]::Create($url)
+   $request.AllowAutoRedirect=$false
+   $response=$request.GetResponse()
+   $source = $([String]$response.GetResponseHeader("Location")).Replace('tag','download') + '/OpenSSH-Win64.zip'
+   ## Download the latest OpenSSH for Windows package to the current working directory
+   $webClient = [System.Net.WebClient]::new()
+   $webClient.DownloadFile($source, (Get-Location).Path + '\OpenSSH-Win64.zip')
+   
+    Get-ChildItem *.zip
+
+    # Extract the ZIP to a temporary location
+    Expand-Archive -Path .\OpenSSH-Win64.zip -DestinationPath ($env:temp) -Force
+    # Move the extracted ZIP contents from the temporary location to C:\Program Files\OpenSSH\
+    Move-Item "$($env:temp)\OpenSSH-Win64" -Destination "C:\Program Files\OpenSSH\" -Force
+    # Unblock the files in C:\Program Files\OpenSSH\
+    Get-ChildItem -Path "C:\Program Files\OpenSSH\" | Unblock-File
+
+    & 'C:\Program Files\OpenSSH\install-sshd.ps1'
+    Set-Service sshd -StartupType Automatic
+    Start-Service sshd
+
+    New-NetFirewallRule -Name sshd -DisplayName 'Allow SSH' -Enabled True -Direction Inbound -Protocol TCP -Action Allow -LocalPort 22
     </powershell>
     EOF
 

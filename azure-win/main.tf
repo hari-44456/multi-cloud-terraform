@@ -196,10 +196,7 @@ resource "azurerm_virtual_machine" "main" {
  /* provisioner "local-exec" {
     command = "az vm generalize --resource-group ${azurerm_resource_group.main.name} --name ${azurerm_virtual_machine.main.name}"
   }*/
-  provisioner "local-exec" {
-    command = "osdiskid=$(az vm show -g ${azurerm_resource_group.main.name} -n ${azurerm_virtual_machine.main.name} --query ${var.query}  -o tsv)"
-    
-  }
+ 
   provisioner "local-exec" {
     command = "az snapshot create --resource-group ${azurerm_resource_group.main.name} --source ${var.prefix}OS --name ${var.snapshot}"
     

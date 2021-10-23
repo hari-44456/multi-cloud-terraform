@@ -93,3 +93,8 @@ resource "aws_ami_from_instance" "ami" {
     aws_instance.web
   ]
 }
+resource "null_resource" "destroy" {
+   provisioner "local-exec" {
+     command ="terraform destroy  -target aws_instance.web -target module.vpc -target aws_security_group.myapp-sg"
+   }
+}

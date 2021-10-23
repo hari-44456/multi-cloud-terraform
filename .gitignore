@@ -1,6 +1,6 @@
 */.terraform
 */.terraform.*
-
+*/.tfvars
 aws/terraform.tfvars
 azure/terraform.tfvars
 gcp/terraform.tfvars

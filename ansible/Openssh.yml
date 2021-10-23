@@ -1,0 +1,29 @@
+---
+- name: Terraform Ansible Integration
+  hosts: all
+  
+
+  tasks:
+
+    - name: Run basic PowerShell script
+      ansible.windows.win_powershell: 
+        script: |
+           $url = https://github.com/PowerShell/Win32-OpenSSH/releases/latest/
+           $request = [System.Net.WebRequest]::Create($url)
+           $request.AllowAutoRedirect=$false
+           $response=$request.GetResponse()
+           $source = $([String]$response.GetResponseHeader("Location")).Replace('tag','download') + '/OpenSSH-Win64.zip'
+           $webClient = [System.Net.WebClient]::new()
+           $webClient.DownloadFile($source, (Get-Location).Path + '\OpenSSH-Win64.zip')
+           Get-ChildItem *.zip
+           Expand-Archive -Path .\OpenSSH-Win64.zip -DestinationPath ($env:temp) -Force
+           Move-Item "$($env:temp)\OpenSSH-Win64" -Destination "C:\Program Files\OpenSSH\" -Force
+           Get-ChildItem -Path "C:\Program Files\OpenSSH\" | Unblock-File
+           & 'C:\Program Files\OpenSSH\install-sshd.ps1'
+           Set-Service sshd -StartupType Automatic
+           Start-Service sshd
+           New-NetFirewallRule -Name sshd -DisplayName 'Allow SSH' -Enabled True -Direction Inbound -Protocol TCP -Action Allow -LocalPort 22
+
+
+    
+

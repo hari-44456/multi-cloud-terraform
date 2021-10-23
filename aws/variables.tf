@@ -1,9 +1,11 @@
 variable "access_key" {
     description = "Specify aws ACCESS_KEY"
+   
 }
 
 variable "secret_key" {
     description = "Specify aws SECRET_ACCESS_KEY"
+    
 }
 
 variable public_key_location {
